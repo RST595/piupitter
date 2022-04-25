@@ -1,7 +1,6 @@
 package com.stpr.piupitter.web_controller;
 
 import com.stpr.piupitter.data.model.user.AppUser;
-import com.stpr.piupitter.data.model.user.Role;
 import com.stpr.piupitter.data.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
