@@ -21,11 +21,13 @@
         <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
         <button type="submit">Найти</button>
     </form>
+<!--    name of map with all Messages-->
     {{#messages}}
         <div>
             <b>{{id}}</b>
             <span>{{text}}</span>
             <i>{{tag}}</i>
+<!--            take this field from method message.getAuthorName();-->
             <strong>{{authorName}}</strong>
         </div>
     {{/messages}}
