@@ -1,8 +1,10 @@
 package com.stpr.piupitter.web_controller;
 
 import com.stpr.piupitter.data.model.Message;
+import com.stpr.piupitter.data.model.user.AppUser;
 import com.stpr.piupitter.data.repository.MessageRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,8 +22,10 @@ public class MainController {
     }
 
     @PostMapping("/main")
-    public String add(@RequestParam String text, @RequestParam String tag, Map<String, Object> model) {
-        messageRepo.save(new Message(text, tag));
+    public String add(@AuthenticationPrincipal AppUser author,
+                      @RequestParam String text,
+                      @RequestParam String tag, Map<String, Object> model) {
+        messageRepo.save(new Message(text, tag, author));
         model.put("messages", messageRepo.findAll());
         return "main";
     }
