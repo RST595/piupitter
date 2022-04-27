@@ -23,6 +23,11 @@ public class RegistrationController {
         return "registration";
     }
 
+    @GetMapping("/login")
+    public String login(){
+        return "login";
+    }
+
     @PostMapping("/registration")
     public String addNewUSer(AppUser user, Map<String, Object> model){
         if(userRepo.findAppUserByUsername(user.getUsername()) != null){
