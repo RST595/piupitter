@@ -5,9 +5,7 @@
 Add new user
 
 <!--if model from controller contain message, then show it-->
-<#if message??>
-    ${message}
-</#if>
+${message?ifExists}
 
 <@l.login "/registration" />
 </@f.page>

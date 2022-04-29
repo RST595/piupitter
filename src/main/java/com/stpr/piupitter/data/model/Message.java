@@ -23,6 +23,8 @@ public class Message {
     @JoinColumn(name = "user_id")
     private AppUser author;
 
+    private String filename;
+
     public Message(String text, String tag, AppUser author) {
         this.text = text;
         this.tag = tag;
