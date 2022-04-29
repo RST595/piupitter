@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Piupitter</title>
+<#--    color of text at pages-->
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>

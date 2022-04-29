@@ -34,7 +34,7 @@ public class MainController {
     public String add(@AuthenticationPrincipal AppUser author,
                       @RequestParam String text,
                       @RequestParam String tag, Map<String, Object> model,
-                        @RequestParam("file")MultipartFile file) throws IOException {
+                        @RequestParam("file")MultipartFile file) throws IOException { //MultipartFile file to upload images
         Message message = new Message(text, tag, author);
 
         if(file != null && !file.getOriginalFilename().isEmpty()){
@@ -42,7 +42,7 @@ public class MainController {
             if(!uploadDir.exists()){
                 uploadDir.mkdir();
             }
-            String uuidFile = UUID.randomUUID().toString();
+            String uuidFile = UUID.randomUUID().toString(); //make random filename part
             String resultFilename = uuidFile + "." + file.getOriginalFilename();
             file.transferTo(new File(uploadPath + "/" + resultFilename));
             message.setFilename(resultFilename);

@@ -11,6 +11,7 @@
         <form method="post" enctype="multipart/form-data">
             <input type ="text" name ="text" placeholder="введите сообщение">
             <input type ="text" name ="tag" placeholder="#хэштег">
+            <#--            add image-->
             <input type="file" name="file">
             <input type="hidden" name="_csrf" value="${_csrf.token}" />
             <button type="submit">Добавить</button>
@@ -30,6 +31,7 @@
             <i>${message.tag}</i>
 <!--            take this field from method message.getAuthorName();-->
             <strong>${message.authorName}</strong>
+<#--            add image-->
             <div>
                <#if message.filename??>
                    <img src="/img/${message.filename}">
