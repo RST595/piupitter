@@ -2,10 +2,10 @@
 <#import 'logintmp.ftlh' as l>
 
 <@f.page>
-Add new user
+    <div class="mb-1">Add new user</div>
 
 <!--if model from controller contain message, then show it-->
 ${message?ifExists}
 
-<@l.login "/registration" />
+<@l.login "/registration" true/>
 </@f.page>

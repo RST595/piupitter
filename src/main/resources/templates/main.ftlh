@@ -1,44 +1,77 @@
 
 <#import 'commontmp.ftlh' as f>
-<#import 'logintmp.ftlh' as l>
+
 
 <@f.page>
-<div>
-    <@l.logout />
-    <span><a href="/user">User list</a></span>
-</div>
-    <div>
-        <form method="post" enctype="multipart/form-data">
-            <input type ="text" name ="text" placeholder="введите сообщение">
-            <input type ="text" name ="tag" placeholder="#хэштег">
-            <#--            add image-->
-            <input type="file" name="file">
-            <input type="hidden" name="_csrf" value="${_csrf.token}" />
-            <button type="submit">Добавить</button>
-        </form>
-    </div>
-    <div>Список сообщений</div>
-<!--    <input type="hidden" name="_csrf" value="{{_csrf.token}}" /> use this for each from to sent csrf with request-->
-    <form method="get" action="/main">
-        <input type="text" name="filter" value="${filter?ifExists}}">
-        <button type="submit">Найти</button>
-    </form>
-<!--    name of map with all Messages-->
-<#list messages as message>
-        <div>
-            <b>${message.id}</b>
-            <span>${message.text}</span>
-            <i>${message.tag}</i>
-<!--            take this field from method message.getAuthorName();-->
-            <strong>${message.authorName}</strong>
-<#--            add image-->
-            <div>
-               <#if message.filename??>
-                   <img src="/img/${message.filename}">
-               </#if>
+<#--    <style>-->
+
+<#--    .card-columns {-->
+<#--        media-breakpoint-only(lg) {-->
+<#--            column-count: 4;-->
+<#--        }-->
+<#--        <#include media-breakpoint-only(xl)> {-->
+<#--            column-count: 5;-->
+<#--        }-->
+<#--    }-->
+<#--    </style>-->
+
+        <form method="get" action="/main" class="form-inline">
+            <div class="form-group mx-sm-3 mb-2">
+                <input type="text" name="filter" class="form-control" value="${filter?ifExists}" placeholder="search by tag">
             </div>
+            <button type="submit" class="btn btn-primary mb-2">search</button>
+        </form>
+    <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+        Add new message
+    </a>
+    <div class="collapse" id="collapseExample">
+        <div class="form-group mt-3">
+            <form method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <input type ="text" class="form-control" name ="text" placeholder="введите сообщение">
+                </div>
+                <div class="form-group">
+                    <input type ="text" class="form-control" name ="tag" placeholder="#хэштег">
+                </div>
+                <#--            add image-->
+                <div class="form-group">
+                    <div class="custom-file">
+                        <input type="file" name="file" id="customFile">
+                        <label class="custom-file-label" for="customFile">choose file</label>
+                    </div>
+                </div>
+                <input type="hidden" name="_csrf" value="${_csrf.token}" />
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">POST</button>
+                </div>
+            </form>
         </div>
-    <#else>
-    No message
-</#list>
+    </div>
+<!--    <input type="hidden" name="_csrf" value="{{_csrf.token}}" /> use this for each from to sent csrf with request-->
+
+<!--    name of map with all Messages-->
+    <div class="card-columns">
+        <#list messages as message>
+            <div class="card my-3" style="width: 18rem;">
+                <#--            add image-->
+                <div>
+                    <#if message.filename??>
+                        <img src="/img/${message.filename}" class="card-img-top">
+                    </#if>
+                </div>
+                <div class="m-2">
+                    <span>${message.text}</span>
+                    <i>${message.tag}</i>
+                </div>
+                <!--            take this field from method message.getAuthorName();-->
+                <div class="card-footer text-muted">
+                    ${message.authorName}
+                </div>
+
+
+            </div>
+        <#else>
+            No message
+        </#list>
+    </div>
 </@f.page>
