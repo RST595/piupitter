@@ -3,7 +3,7 @@
 <#import 'logintmp.ftlh' as l>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/">piupitter</a>
+    <a class="navbar-brand px-3" href="/">piupitter</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -25,8 +25,15 @@
             </li>
             </#if>
         </ul>
-
-        <div class="navbar-text mr-3">${name}</div>
-        <@l.logout />
     </div>
+
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <div class="navbar-text px-3">${name}</div>
+            </li>
+            <li class="nav-item">
+                <div class="navbar-text px-3"><@l.logout /></div>
+            </li>
+        </ul>
+
 </nav>
