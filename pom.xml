@@ -75,6 +75,14 @@
 			<version>5.6.3</version>
 			<scope>test</scope>
 		</dependency>
+
+<!--		mail notification-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+			<version>2.6.7</version>
+		</dependency>
+
     </dependencies>
 
 	<build>
