@@ -2,16 +2,19 @@ package com.stpr.piupitter.service;
 
 
 import com.stpr.piupitter.data.model.user.AppUser;
+import com.stpr.piupitter.data.model.user.Role;
 import com.stpr.piupitter.data.repository.UserRepo;
+import freemarker.template.utility.StringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
-import java.util.Collections;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.stpr.piupitter.data.model.user.Role.USER;
 
@@ -41,6 +44,11 @@ public class UserService implements UserDetailsService {
         user.setActivationCode(UUID.randomUUID().toString());
         userRepo.save(user);
 
+        sendMessage(user);
+        return true;
+    }
+
+    private void sendMessage(AppUser user) {
         if(!user.getEmail().isEmpty()){
             String welcomeMessage = String.format(
                     "Hello, %s! \n" +
@@ -48,7 +56,6 @@ public class UserService implements UserDetailsService {
                                 user.getUsername(), user.getActivationCode());
             mailSender.send(user.getEmail(), "Activation code", welcomeMessage);
         }
-        return true;
     }
 
     public boolean activateUser(String code) {
@@ -61,5 +68,45 @@ public class UserService implements UserDetailsService {
         user.setActivationCode(null);
         userRepo.save(user);
         return true;
+    }
+
+    public List<AppUser> findAllUsers() {
+        return userRepo.findAll();
+    }
+
+    public void saveUser(AppUser user, String username, Map<String, String> form) {
+        user.setUsername(username);
+
+        Set<String> roles = Arrays.stream(Role.values())
+                .map(Role::name)
+                .collect(Collectors.toSet()); //create set of roles to check data for new roles from form
+
+        user.getRoles().clear();
+
+        for(String key : form.keySet()){
+            if(roles.contains(key)){
+                user.getRoles().add(Role.valueOf(key));
+            }
+        }
+        userRepo.save(user);
+    }
+
+    public void updateProfile(AppUser user, String password, String email) {
+        String userCurrentEmail = user.getEmail();
+        boolean isEmailChanged = email != null && !email.equals(userCurrentEmail)
+                || (userCurrentEmail != null && userCurrentEmail.equals(email));
+        if(isEmailChanged){
+            user.setEmail(email);
+            if(!email.isEmpty()){
+                user.setActivationCode(UUID.randomUUID().toString());
+            }
+        }
+
+        if(!password.isEmpty()){
+            user.setPassword(password);
+        }
+
+        userRepo.save(user);
+        if(isEmailChanged) sendMessage(user);
     }
 }
