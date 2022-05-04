@@ -8,11 +8,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -32,29 +34,43 @@ public class MainController {
 
     @PostMapping("/main")
     public String add(@AuthenticationPrincipal AppUser author,
-                      @RequestParam String text,
-                      @RequestParam String tag, Map<String, Object> model,
+                      @Valid Message message, //@Valid check message entity for @NotBlank, @Length and so on...
+                      BindingResult bindingResult, //list of fields and errors of validation, always should be right before Model argument
+                     Model model,
                         @RequestParam("file")MultipartFile file) throws IOException { //MultipartFile file to upload images
-        Message message = new Message(text, tag, author);
 
-        if(file != null && !file.getOriginalFilename().isEmpty()){
-            File uploadDir = new File(uploadPath);
-            if(!uploadDir.exists()){
-                uploadDir.mkdir();
+        message.setAuthor(author);
+
+        if (bindingResult.hasErrors()) {
+
+            Map<String, String> errorsMap = ControllerUtils.getErrors(bindingResult); //creating map for Model from bindingResult
+
+            model.mergeAttributes(errorsMap);
+            model.addAttribute("message", message);
+        } else {
+            //if picture was chosen
+            if (file != null && !file.getOriginalFilename().isEmpty()) {
+                File uploadDir = new File(uploadPath);
+                if (!uploadDir.exists()) {
+                    uploadDir.mkdir();
+                }
+                String uuidFile = UUID.randomUUID().toString(); //make random filename part
+                String resultFilename = uuidFile + "." + file.getOriginalFilename();
+                file.transferTo(new File(uploadPath + "/" + resultFilename));
+                message.setFilename(resultFilename);
             }
-            String uuidFile = UUID.randomUUID().toString(); //make random filename part
-            String resultFilename = uuidFile + "." + file.getOriginalFilename();
-            file.transferTo(new File(uploadPath + "/" + resultFilename));
-            message.setFilename(resultFilename);
+            model.addAttribute("message", null); //clear input message form after successful adding
+            messageRepo.save(message);
         }
 
-        messageRepo.save(message);
-        model.put("messages", messageRepo.findAll());
+        model.addAttribute("messages", messageRepo.findAll());
+
         return "main";
     }
     @GetMapping("/main")
     public String main(@RequestParam(required = false, defaultValue = "")String filter, Model model) {
         Iterable<Message> messages;
+        //if filter was set
         if(filter != null && !filter.isEmpty()){
             messages = messageRepo.findMessageByTag(filter);
         } else {
@@ -64,5 +80,7 @@ public class MainController {
         model.addAttribute("filter", filter);
         return "main";
     }
+
+
 
 }

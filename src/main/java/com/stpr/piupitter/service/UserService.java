@@ -4,14 +4,13 @@ package com.stpr.piupitter.service;
 import com.stpr.piupitter.data.model.user.AppUser;
 import com.stpr.piupitter.data.model.user.Role;
 import com.stpr.piupitter.data.repository.UserRepo;
-import freemarker.template.utility.StringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -27,10 +26,15 @@ public class UserService implements UserDetailsService {
 
     private final UserRepo userRepo;
     private final MailSender mailSender;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepo.findAppUserByUsername(username);
+        AppUser user = userRepo.findAppUserByUsername(username);
+        if(user == null){
+            throw new UsernameNotFoundException("User not found");
+        }
+        return user;
     }
 
     public boolean addUser(AppUser user){
@@ -42,6 +46,7 @@ public class UserService implements UserDetailsService {
         user.setActive(true);
         user.setRoles(Collections.singleton(USER));
         user.setActivationCode(UUID.randomUUID().toString());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepo.save(user);
 
         sendMessage(user);
@@ -108,5 +113,9 @@ public class UserService implements UserDetailsService {
 
         userRepo.save(user);
         if(isEmailChanged) sendMessage(user);
+    }
+
+    public boolean validateUserRequest(AppUser user) {
+        return (user.getPassword() != null && user.getPassword().equals(user.getPassword2()));
     }
 }

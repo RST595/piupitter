@@ -1,3 +1,4 @@
+-- should add first admin to app
 insert into app_user (id, username, password, is_active)
     values (1, 'admin', 'string', true);
 
