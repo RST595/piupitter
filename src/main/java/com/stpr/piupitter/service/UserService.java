@@ -115,7 +115,7 @@ public class UserService implements UserDetailsService {
         if(isEmailChanged) sendMessage(user);
     }
 
-    public boolean validateUserRequest(AppUser user) {
-        return (user.getPassword() != null && user.getPassword().equals(user.getPassword2()));
+    public boolean validateUserRequest(AppUser user, String passwordConfirm) {
+        return (user.getPassword() != null && user.getPassword().equals(passwordConfirm));
     }
 }

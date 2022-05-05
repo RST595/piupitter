@@ -42,19 +42,29 @@
                     </#if>
                 </div>
             </div>
-        <div class="form-group">
-            <label class="col-sm-2 col-form-label" > Email:</label>
-            <div class="col-sm-6">
-                <input type="email" name="email" value="<#if user??>${user.email}</#if>"
-                       class = "form-control ${(emailError??)?string('is-invalid', "")}"
-                       placeholder="e-mail"/>
-                <#if emailError??>
-                    <div class="invalid-feedback">
-                        ${emailError}
-                    </div>
-                </#if>
+            <div class="form-group">
+                <label class="col-sm-2 col-form-label" > Email:</label>
+                <div class="col-sm-6">
+                    <input type="email" name="email" value="<#if user??>${user.email}</#if>"
+                           class = "form-control ${(emailError??)?string('is-invalid', "")}"
+                           placeholder="e-mail"/>
+                    <#if emailError??>
+                        <div class="invalid-feedback">
+                            ${emailError}
+                        </div>
+                    </#if>
+                </div>
+
+                <#--            reCaptcha-->
             </div>
-        </div>
+            <div class="col-sm-6">
+                <div class="g-recaptcha" data-sitekey=""></div>
+            </div>
+            <#if captchaError??>
+                <div class="alert alert-danger" role="alert">
+                    ${captchaError}
+                </div>
+            </#if>
         </#if>
         <input type="hidden" name="_csrf" value="${_csrf.token}" />
         <!--link to page-->

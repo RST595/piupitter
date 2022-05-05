@@ -25,10 +25,6 @@ public class AppUser implements UserDetails {
     @NotBlank(message = "Password cannot be empty")
     private String password;
 
-    @Transient //tells hibernate to not check for this value in db and not to write it ti db
-    @NotBlank(message = "Password cannot be empty")
-    private String password2;
-
     private boolean isActive;
 
     @Email(message = "Email is not correct")

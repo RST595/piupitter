@@ -96,6 +96,13 @@
 			<version>2.6.7</version>
 		</dependency>
 
+<!--		to save rememberMe data in db-->
+		<dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session-jdbc</artifactId>
+			<version>2.6.3</version>
+		</dependency>
+
     </dependencies>
 
 	<build>
