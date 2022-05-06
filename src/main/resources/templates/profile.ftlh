@@ -1,6 +1,6 @@
-<#import 'commontmp.ftlh' as f>
+<#import 'tmp_common.ftlh' as c>
 
-<@f.page>
+<@c.page>
     <h5>${username}</h5>
     ${message?ifExists}
     <form method="post">
@@ -19,4 +19,4 @@
         <input type="hidden" name="_csrf" value="${_csrf.token}" />
         <button class="btn btn-primary" type="submit" >save</button>
     </form>
-</@f.page>
+</@c.page>

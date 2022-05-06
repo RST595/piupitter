@@ -1,6 +1,11 @@
-<#import 'commontmp.ftlh' as f>
+<#import 'tmp_common.ftlh' as c>
+<#import 'tmp_login.ftlh' as l>
 
-<@f.page>
+<@c.page>
     <h5>Hi there</h5>
     <div>This is pet project of RST</div>
-</@f.page>
+    <#if user??>
+    <#else>
+        <@l.login "/login" false/>
+    </#if>
+</@c.page>

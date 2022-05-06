@@ -1,6 +1,6 @@
-<#import 'commontmp.ftlh' as f>
+<#import 'tmp_common.ftlh' as c>
 
-<@f.page>
+<@c.page>
 Edit user data
 
 <form action="/user" method="post">
@@ -14,4 +14,4 @@ Edit user data
     <input type="hidden" value="${_csrf.token}" name="_csrf">
     <button type="submit">save changes</button>
 </form>
-</@f.page>
+</@c.page>

@@ -1,11 +1,11 @@
-<#import 'commontmp.ftlh' as f>
-<#import 'logintmp.ftlh' as l>
+<#import 'tmp_common.ftlh' as c>
+<#import 'tmp_login.ftlh' as l>
 
-<@f.page>
+<@c.page>
     <div class="mb-1">Add new user</div>
 
 <!--if model from controller contain message, then show it-->
 ${message?ifExists}
 
 <@l.login "/registration" true/>
-</@f.page>
+</@c.page>

@@ -1,6 +1,6 @@
-<#import 'commontmp.ftlh' as f>
+<#import 'tmp_common.ftlh' as c>
 
-<@f.page>
+<@c.page>
     List of users
     <table>
         <thead>
@@ -19,4 +19,4 @@
         </#list>
         </tbody>
     </table>
-</@f.page>
+</@c.page>

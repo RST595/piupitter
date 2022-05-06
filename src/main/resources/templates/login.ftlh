@@ -1,8 +1,8 @@
 
-<#import 'commontmp.ftlh' as f>
-<#import 'logintmp.ftlh' as l>
+<#import 'tmp_common.ftlh' as c>
+<#import 'tmp_login.ftlh' as l>
 
-<@f.page>
+<@c.page>
 <#--    not authenticated user don't have cookie Session-->
     <#if Session?? && Session.SPRING_SECURITY_LAST_EXCEPTION??>
         <div class="alert alert-danger" role="alert">
@@ -16,4 +16,4 @@
         </div>
     </#if>
     <@l.login "/login" false/>
-</@f.page>
+</@c.page>
