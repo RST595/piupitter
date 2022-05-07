@@ -118,4 +118,14 @@ public class UserService implements UserDetailsService {
     public boolean validateUserRequest(AppUser user, String passwordConfirm) {
         return (user.getPassword() != null && user.getPassword().equals(passwordConfirm));
     }
+
+    public void subscribe(AppUser currentUser, AppUser user) {
+        user.getSubscribers().add(currentUser);
+        userRepo.save(user);
+    }
+
+    public void unsubscribe(AppUser currentUser, AppUser user) {
+        user.getSubscribers().remove(currentUser);
+        userRepo.save(user);
+    }
 }

@@ -4,8 +4,4 @@
 <@c.page>
     <h5>Hi there</h5>
     <div>This is pet project of RST</div>
-    <#if user??>
-    <#else>
-        <@l.login "/login" false/>
-    </#if>
 </@c.page>

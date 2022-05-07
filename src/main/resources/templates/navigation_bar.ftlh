@@ -40,7 +40,7 @@
 
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <div class="navbar-text px-3">${name}</div>
+                <div class="navbar-text px-3"><#if user??>${name}<#else>Please, login</#if></div>
             </li>
             <li class="nav-item">
                 <div class="navbar-text px-3"><@l.logout /></div>

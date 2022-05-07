@@ -94,6 +94,10 @@ public class MainController {
                                @PathVariable AppUser user,
                                Model model,
                                @RequestParam(required = false) Message message){
+        model.addAttribute("userChannel", user);
+        model.addAttribute("subscriptionsCount", user.getSubscriptions().size());
+        model.addAttribute("subscribersCount", user.getSubscribers().size());
+        model.addAttribute("isSubscriber", user.getSubscribers().contains(currentUser));
         model.addAttribute("messages", user.getMessages());
         model.addAttribute("message", message);
         model.addAttribute("isCurrentUser", currentUser.equals(user));
