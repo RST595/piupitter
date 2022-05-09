@@ -11,7 +11,7 @@
         body = head + bodyBefore + (pageNumber > 3 && pageNumber < totalPages - 2)?then([pageNumber], []) + bodyAfter + tail
         >
     <#else>
-        <#assign body = 1..page.getTotalPAges()>
+        <#assign body = 1..page.getTotalPages()>
     </#if>
     <div class="mt-3">
         <ul class="pagination">
