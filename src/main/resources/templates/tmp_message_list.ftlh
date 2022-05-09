@@ -1,12 +1,12 @@
 <#include "security.ftlh">
 <!--    name of map with all Messages-->
-<div class="row row-cols-2">
+<div class="row row-cols-2" id="message-list">
     <#list messages as message>
-        <div class="card mx-sm-3 mb-5" style="width: 18rem;">
+        <div class="card mx-sm-3 mb-5" style="width: 18rem;" data-id="${message.id}">
             <#--            add image-->
             <div>
                 <#if message.filename??>
-                    <img src="/img/${message.filename}" class="card-img-top">
+                    <img src="/img/${message.filename}" class="card-img-top" />
                 </#if>
             </div>
             <div class="my-2">

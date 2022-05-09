@@ -6,7 +6,7 @@
         <form method="post" enctype="multipart/form-data">
             <div class="form-group mx-sm-3 mb-2">
                 <input type ="text" class="form-control ${(textError??)?string('is-invalid', "")}"
-                       value="<#if message??>${message.text}</#if>" name ="text" placeholder="message">
+                       value="<#if message??>${message.text}</#if>" name ="text" placeholder="message" />
 
                 <#--                    show error message if we have text+"Error" from @Valid-->
                 <#if textError??>
@@ -17,7 +17,7 @@
             </div>
             <div class="form-group mx-sm-3 mb-2">
                 <input type ="text" class="form-control"
-                       value="<#if message??>${message.tag}</#if>" name ="tag" placeholder="#hashtag">
+                       value="<#if message??>${message.tag}</#if>" name ="tag" placeholder="#hashtag" />
                 <#--                    show error message if we have text+"Error" from @Valid-->
                 <#if tagError??>
                     <div class="invalid-feedback">
@@ -29,7 +29,7 @@
 
             <div class="form-group mx-sm-3 mb-2">
                 <div class="custom-file">
-                    <input type="file" name="file" id="customFile">
+                    <input type="file" name="file" id="customFile" />
                     <label class="custom-file-label" for="customFile"></label>
                 </div>
             </div>

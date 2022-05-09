@@ -1,7 +1,6 @@
 package com.stpr.piupitter.data.model.user;
 
 import com.stpr.piupitter.data.model.Message;
-import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -14,7 +13,6 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Data
 @Table(name = "app_user")
 public class AppUser implements UserDetails {
 
@@ -96,5 +94,87 @@ public class AppUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return isActive();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getActivationCode() {
+        return activationCode;
+    }
+
+    public void setActivationCode(String activationCode) {
+        this.activationCode = activationCode;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public Set<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(Set<Message> messages) {
+        this.messages = messages;
+    }
+
+    public Set<AppUser> getSubscribers() {
+        return subscribers;
+    }
+
+    public void setSubscribers(Set<AppUser> subscribers) {
+        this.subscribers = subscribers;
+    }
+
+    public Set<AppUser> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscriptions(Set<AppUser> subscriptions) {
+        this.subscriptions = subscriptions;
     }
 }
