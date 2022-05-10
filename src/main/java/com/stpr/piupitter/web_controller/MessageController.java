@@ -3,10 +3,9 @@ package com.stpr.piupitter.web_controller;
 import com.stpr.piupitter.data.model.Message;
 import com.stpr.piupitter.data.model.user.AppUser;
 import com.stpr.piupitter.data.repository.MessageRepo;
-import freemarker.template.utility.StringUtil;
+import com.stpr.piupitter.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.Banner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -15,22 +14,25 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
-public class MainController {
+public class MessageController {
     private final MessageRepo messageRepo;
+
+    private final MessageService messageService;
 
     @Value("${upload.path}")
     private String uploadPath;
@@ -43,8 +45,8 @@ public class MainController {
     public String add(@AuthenticationPrincipal AppUser author,
                       @Valid Message message, //@Valid check message entity for @NotBlank, @Length and so on...
                       BindingResult bindingResult, //list of fields and errors of validation, always should be right before Model argument
-                     Model model,
-                        @RequestParam("file")MultipartFile file) throws IOException { //MultipartFile file to upload images
+                      Model model,
+                      @RequestParam("file")MultipartFile file) throws IOException { //MultipartFile file to upload images
 
         message.setAuthor(author);
 
@@ -82,32 +84,31 @@ public class MainController {
     @GetMapping("/main")
     public String main(@RequestParam(required = false, defaultValue = "")String filter,
                        Model model,
-                       @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<Message> page;
+                       @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable,
+                       @AuthenticationPrincipal AppUser currentUser) {
+
         //if filter was set
-        if(filter != null && !filter.isEmpty()){
-            page = messageRepo.findMessageByTag(filter, pageable);
-        } else {
-            page = messageRepo.findAll(pageable);
-        }
-        model.addAttribute("page", page);
+        model.addAttribute("page", messageService.messageList(pageable, filter, currentUser));
+
         model.addAttribute("url", "/main");
         model.addAttribute("filter", filter);
         return "main";
     }
 
-    @GetMapping("/user-messages/{user}")
+    @GetMapping("/user-messages/{author}")
     public String userMessages(@AuthenticationPrincipal AppUser currentUser,
-                               @PathVariable AppUser user,
+                               @PathVariable AppUser author,
                                Model model,
-                               @RequestParam(required = false) Message message){
-        model.addAttribute("userChannel", user);
-        model.addAttribute("subscriptionsCount", user.getSubscriptions().size());
-        model.addAttribute("subscribersCount", user.getSubscribers().size());
-        model.addAttribute("isSubscriber", user.getSubscribers().contains(currentUser));
-        model.addAttribute("messages", user.getMessages());
+                               @RequestParam(required = false) Message message,
+                               @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable){
+        model.addAttribute("userChannel", author);
+        model.addAttribute("subscriptionsCount", author.getSubscriptions().size());
+        model.addAttribute("subscribersCount", author.getSubscribers().size());
+        model.addAttribute("isSubscriber", author.getSubscribers().contains(currentUser));
+        model.addAttribute("page", messageService.messageListForUser(pageable, currentUser, author));
         model.addAttribute("message", message);
-        model.addAttribute("isCurrentUser", currentUser.equals(user));
+        model.addAttribute("isCurrentUser", currentUser.equals(author));
+        model.addAttribute("url", "/user-messages/" + author.getId());
         return "user_messages";
     }
 
@@ -130,6 +131,25 @@ public class MainController {
             messageRepo.save(message);
         }
         return "redirect:/user-messages/" + user;
+    }
+
+    @GetMapping("/messages/{message}/like")
+    public String like(@AuthenticationPrincipal AppUser currentUser,
+                       @PathVariable Message message,
+                       RedirectAttributes redirectAttributes, //redirectAttributes we return new parameters to page from which we came
+                       @RequestHeader(required = false) String referer){ //referrer show from which page we came
+        Set<AppUser> likes = message.getLikes();
+        if(likes.contains(currentUser)){
+            likes.remove(currentUser);
+        }else {
+            likes.add(currentUser);
+        }
+        UriComponents components = UriComponentsBuilder.fromHttpUrl(referer).build();
+        components.getQueryParams()
+                .entrySet()
+                .forEach(pair-> redirectAttributes.addAttribute(pair.getKey(), pair.getValue())); //add to response all attributes which came
+        return "redirect:" + components.getPath();
+
     }
 
 

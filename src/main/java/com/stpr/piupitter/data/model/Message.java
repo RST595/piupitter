@@ -2,12 +2,15 @@ package com.stpr.piupitter.data.model;
 
 
 import com.stpr.piupitter.data.model.user.AppUser;
+import com.stpr.piupitter.data.util.MessageHelper;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -30,6 +33,15 @@ public class Message {
 
     private String filename;
 
+    @ManyToMany
+    @JoinTable(
+            name = "message_likes",
+            joinColumns = {@JoinColumn(name = "message_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")}
+    )
+    private Set<AppUser> likes = new HashSet<>();
+
+
     public Message(String text, String tag, AppUser author) {
         this.text = text;
         this.tag = tag;
@@ -37,6 +49,6 @@ public class Message {
     }
 
     public String getAuthorName(){
-        return author != null ? author.getUsername() : "<none>";
+        return MessageHelper.getAuthorName(author);
     }
 }

@@ -16,13 +16,23 @@
                     <i>#${message.tag}</i>
                 </div>
                 <!--            take this field from method message.getAuthorName();-->
-                <div class="card-footer text-muted">
-                    <a href="/user-messages/${message.author.id}">${message.authorName}</a>
-                    <#if message.author.id == currentUserId>
-                        <a class="btn btn-primary" href="/user-messages/${message.author.id}?message=${message.id}">
-                            edit
+                <div class="card-footer text-muted container">
+                    <div class="col mx-2">
+                        <a class="col align-self-center mx-2" href="/user-messages/${message.author.id}">${message.authorName}</a>
+                        <a class="col align-self-center mx-2" href="/messages/${message.id}/like">
+                        <#if message.meLiked>
+                            <i class="fas fa-heart mx-2"></i>
+                        <#else>
+                            <i class="far fa-heart mx-2"></i>
+                        </#if>
+                        ${message.likes}
                         </a>
-                    </#if>
+                        <#if message.author.id == currentUserId>
+                            <a class="col btn btn-primary mx-2" href="/user-messages/${message.author.id}?message=${message.id}">
+                                edit
+                            </a>
+                        </#if>
+                    </div>
                 </div>
             </div>
         <#else>

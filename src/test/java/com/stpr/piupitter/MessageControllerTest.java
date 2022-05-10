@@ -1,6 +1,6 @@
 package com.stpr.piupitter;
 
-import com.stpr.piupitter.web_controller.MainController;
+import com.stpr.piupitter.web_controller.MessageController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,9 +24,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource("/application-test.properties")
 @Sql(value = {"/create-user-before.sql", "/message-list-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = {"/message-list-after.sql", "/delete-user-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-class MainControllerTest {
+class MessageControllerTest {
     @Autowired
-    private MainController controller;
+    private MessageController controller;
 
     @Autowired
     private MockMvc mockMvc;
